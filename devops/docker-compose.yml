@@ -1,0 +1,17 @@
+version: '3'
+services:
+  spaceship_titanic:
+    image: postgres:11-alpine
+    container_name: spaceship_titanic
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+        - '5432:5432'
+    volumes:
+      - spaceship_titanic:/var/lib/postgresql/data
+
+volumes:
+  spaceship_titanic:
+    driver: local
