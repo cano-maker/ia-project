@@ -7,8 +7,8 @@ import pandas as pd
 Base = declarative_base()
 
 
-class Pasajero(Base):
-    __tablename__ = 'pasajero'
+class Passenger(Base):
+    __tablename__ = 'passenger'
     PassengerId = Column(String, primary_key=True)
     HomePlanet = Column(String)
     CryoSleep = Column(Boolean)
@@ -19,9 +19,9 @@ class Pasajero(Base):
     Name = Column(String)
 
 
-class Servicios(Base):
-    __tablename__ = 'servicios'
-    PassengerId = Column(String, ForeignKey('pasajero.PassengerId'), primary_key=True)
+class Services(Base):
+    __tablename__ = 'services'
+    PassengerId = Column(String, ForeignKey('passenger.PassengerId'), primary_key=True)
     RoomService = Column(Integer)
     FoodCourt = Column(Integer)
     ShoppingMall = Column(Integer)
@@ -29,11 +29,18 @@ class Servicios(Base):
     VRDeck = Column(Integer)
 
 
+def QueryPerClass(engine):
+    query = 'SELECT * FROM Passenger'
+    data_query = pd.read_sql_query(query, con=engine)
+    return data_query
+
+
 if __name__ == '__main__':
     # Cambia los siguientes datos con tus credenciales de Postgres y el nombre de tu base de datos
     engine = create_engine('postgresql://postgres:postgres@localhost:5432/spaceship_titanic')
 
-    # Crea todas las tablas en la base de datos
+    # print(QueryPerClass(engine))
+    #Crea todas las tablas en la base de datos
     Base.metadata.create_all(engine)
 
     # Crea una nueva sesión
@@ -53,5 +60,3 @@ if __name__ == '__main__':
 
     # Cierra la sesión
     session.close()
-
-
