@@ -41,45 +41,43 @@ def create_database(database_name, user, password, host, port):
     except psycopg2.Error as e:
         print(f"Error al crear la base de datos: {e}")
 
+def QueryPerClass(engine):
+    query = 'SELECT * FROM pasajero LIMIT 10'
+    data_query = pd.read_sql_query(query, con=engine)
+    return data_query
 
 if __name__ == '__main__':
-    # Cambia los siguientes datos con tus credenciales de Postgres y el nombre de tu base de datos
     user = 'postgres'
     password = 'postgres'
     host = 'localhost'
     port = '5432'
     database_name = 'spaceship_titanic'
 
-    # Crea la base de datos
     create_database(database_name, user, password, host, port)
 
     engine = create_engine(f'postgresql://{user}:{password}@{host}:{port}/{database_name}')
 
     try:
-        # Crea todas las tablas en la base de datos
         Base.metadata.create_all(engine)
 
-        # Crea una nueva sesión
         Session = sessionmaker(bind=engine)
         session = Session()
 
-        # Lee el archivo CSV
         df = pd.read_csv('./resources/test.csv')
 
-        # Normaliza la información en dos DataFrames
         df_pasajero = df[['PassengerId', 'HomePlanet', 'CryoSleep', 'Cabin', 'Destination', 'Age', 'VIP', 'Name']]
         df_servicios = df[['PassengerId', 'RoomService', 'FoodCourt', 'ShoppingMall', 'Spa', 'VRDeck']]
 
-        # Inserta la información en las tablas
         df_pasajero.to_sql('pasajero', engine, if_exists='append', index=False)
         df_servicios.to_sql('servicios', engine, if_exists='append', index=False)
 
     except exc.IntegrityError as e:
-        print(f"Error de integridad de datos: {e}")
+        print(f"Error de integridad de datos: {e._message}")
     except exc.SQLAlchemyError as e:
-        print(f"Error en SQLAlchemy: {e}")
+        print(f"Error en SQLAlchemy: {e._message}")
     except Exception as e:
         print(f"Error inesperado: {e}")
     finally:
-        # Cierra la sesión
+
         session.close()
+    print(QueryPerClass(engine))
