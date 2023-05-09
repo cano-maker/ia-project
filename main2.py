@@ -8,8 +8,8 @@ import psycopg2
 Base = declarative_base()
 
 
-class Pasajero(Base):
-    __tablename__ = 'pasajero'
+class Passenger(Base):
+    __tablename__ = 'passenger'
     PassengerId = Column(String, primary_key=True)
     HomePlanet = Column(String)
     CryoSleep = Column(Boolean)
@@ -20,9 +20,9 @@ class Pasajero(Base):
     Name = Column(String)
 
 
-class Servicios(Base):
-    __tablename__ = 'servicios'
-    PassengerId = Column(String, ForeignKey('pasajero.PassengerId'), primary_key=True)
+class Service(Base):
+    __tablename__ = 'service'
+    PassengerId = Column(String, ForeignKey('passenger.PassengerId'), primary_key=True)
     RoomService = Column(Integer)
     FoodCourt = Column(Integer)
     ShoppingMall = Column(Integer)
@@ -41,9 +41,25 @@ def create_database(database_name, user, password, host, port):
     except psycopg2.Error as e:
         print(f"Error al crear la base de datos: {e}")
 
-def QueryPerClass(engine):
-    query = 'SELECT * FROM pasajero LIMIT 10'
-    data_query = pd.read_sql_query(query, con=engine)
+
+def QueryPerClass(homePlanet,engine):
+    query = '''
+        SELECT 
+            p."PassengerId",
+            p."Name",
+            s."Spa" AS "SpaSpent"
+        FROM 
+            passenger p
+        JOIN 
+            service s
+        ON 
+            p."PassengerId" = s."PassengerId"
+        WHERE 
+            p."HomePlanet" = %(homePlanet)s;
+    '''
+    queryParameters = {'homePlanet': homePlanet}
+
+    data_query = pd.read_sql_query(query, con=engine, params=queryParameters)
     return data_query
 
 if __name__ == '__main__':
@@ -68,8 +84,8 @@ if __name__ == '__main__':
         df_pasajero = df[['PassengerId', 'HomePlanet', 'CryoSleep', 'Cabin', 'Destination', 'Age', 'VIP', 'Name']]
         df_servicios = df[['PassengerId', 'RoomService', 'FoodCourt', 'ShoppingMall', 'Spa', 'VRDeck']]
 
-        df_pasajero.to_sql('pasajero', engine, if_exists='append', index=False)
-        df_servicios.to_sql('servicios', engine, if_exists='append', index=False)
+        df_pasajero.to_sql('passenger', engine, if_exists='append', index=False)
+        df_servicios.to_sql('service', engine, if_exists='append', index=False)
 
     except exc.IntegrityError as e:
         print(f"Error de integridad de datos: {e._message}")
@@ -80,4 +96,4 @@ if __name__ == '__main__':
     finally:
 
         session.close()
-    print(QueryPerClass(engine))
+    print(QueryPerClass('Earth',engine))
