@@ -96,6 +96,33 @@ class Inicializar_BD:
 	###### Fin Crear Tablas ########
 	################################
 	"""
+
+	"""
+	################################
+	####### Inicio Consulta ########
+	################################
+	"""
+	def query_database(self, query):
+		conn = psycopg2.connect(host=self.Servidor, port= self.Puerto, dbname=self.Nombre_BD, user=self.Usuario, password=self.Password)
+		cursor = conn.cursor()
+		try:
+			cursor.execute(query)
+			FilasConsulta = cursor.fetchall()
+			for Fila in FilasConsulta:
+				print(Fila)
+		except Exception as e:
+			print(f"Exepción por gestionar: {str(e)}")
+			input()
+		finally:
+			cursor.close()
+			conn.close()
+
+	"""
+	################################
+	######## Fin Consulta ##########
+	################################
+	"""
+
 #DB_Params = DB_Structure.DB_Structure()
 #Obj_Init_BD = Inicializar_BD()
 #Obj_Init_BD.CrearBD()

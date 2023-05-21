@@ -7,7 +7,9 @@ class main:
 		self.Obj_Init_BD.CrearBD()
 		self.Obj_Init_BD.Crear_Tablas()
 		self.Poblar_BD.Llenar_Tablas_Desde_CSV()
-		print('Larga vida al POO')
+		query = 'SELECT * FROM passenger ORDER BY RANDOM() LIMIT 10;'
+		self.Obj_Init_BD.query_database(query)
+		print('\nLarga vida al POO')
 		pass
 
 Ejecutar = main()
