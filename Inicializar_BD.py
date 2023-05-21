@@ -1,70 +1,15 @@
-import pandas as pd
 import psycopg2, psycopg2.errors as SQLExcept2
-
-##############################
-##### Inicializar Valores ####
-##############################
-
-Usuario = 'postgres'
-Password = 'postgres'
-Servidor = '127.0.0.1'
-Puerto = '5432'
-Nombre_BD = 'spaceship_titanic' # postgres siempre crea bd en minusculas!!! si pones mayuscula, rompe el código
-Estructura_tablas = {
-	"passenger": {
-		"PassengerId": {"type": "varchar(30)", "primary_key": True},
-		"HomePlanet": {"type": "varchar(30)"},
-		"CryoSleep": {"type": "boolean"},
-		"Cabin": {"type": "varchar(30)"},
-		"Destination": {"type": "varchar(30)"},
-		"Age": {"type": "int"},
-		"VIP": {"type": "boolean"},
-		"Name": {"type": "varchar(50)"}
-	},
-	"Services": {
-		"PassengerId": {"type": "varchar(30)", "primary_key": True, "foreign_key": "passenger(PassengerId)"},
-		"RoomService": {"type": "int"},
-		"FoodCourt": {"type": "int"},
-		"ShoppingMall": {"type": "int"},
-		"Spa": {"type": "int"},
-		"VRDeck": {"type": "int"}
-	}
-}
-
-""" 
-### Codigo para pruebas unitarias
-
-Estructura_tablas = { 
-	"Customer": {
-		"Customer_ID": {"type": "int", "primary_key": True},
-		"Customer_Name": {"type": "varchar(30)"}
-	},
-	"Car_Pool": {
-		"Reference_ID": {"type": "int", "primary_key": True},
-		"Reference_Name": {"type": "varchar(20)"}
-	},
-	"Sold_Car": {
-		"Reference_ID": {"type": "int", "foreign_key": "Car_Pool(Reference_ID)", "primary_key": True},
-		"Customer_ID": {"type": "int", "foreign_key": "Customer(Customer_ID)", "primary_key": True},
-		"Color": {"type": "varchar(15)"}
-	}
-}
-"""
-
-##################################
-##### Fin Inicializar Valores ####
-##################################
-
+import DB_Structure
 
 class Inicializar_BD:
-
-	def __init__(self, Usuario, Password, Servidor, Puerto, Nombre_BD, Estructura_tablas):
-		self.Usuario = Usuario
-		self.Password = Password
-		self.Servidor = Servidor
-		self.Puerto = Puerto
-		self.Nombre_BD = Nombre_BD
-		self.Estructura_tablas = Estructura_tablas
+	def __init__(self):
+		DB_Params = DB_Structure.DB_Structure()
+		self.Usuario = DB_Params.Usuario()
+		self.Password = DB_Params.Password()
+		self.Servidor = DB_Params.Servidor()
+		self.Puerto = DB_Params.Puerto()
+		self.Nombre_BD = DB_Params.Nombre_BD()
+		self.Estructura_tablas = DB_Params.Estructura_tablas()
 
 	###################
 	##### Crear BD ####
@@ -130,7 +75,7 @@ class Inicializar_BD:
 		conn.commit()
 		cursor.close()
 		conn.close()
-		print('Tablas creadas con Exito!')
+		print('Tablas creadas con Exito!\n')
 
 	def __build_create_query(self, table_name, columns):
 		column_definitions = []
@@ -151,7 +96,7 @@ class Inicializar_BD:
 	###### Fin Crear Tablas ########
 	################################
 	"""
-
-Obj_Init_BD = Inicializar_BD(Usuario, Password, Servidor, Puerto, Nombre_BD, Estructura_tablas)
-Obj_Init_BD.CrearBD()
-Obj_Init_BD.Crear_Tablas()
+#DB_Params = DB_Structure.DB_Structure()
+#Obj_Init_BD = Inicializar_BD()
+#Obj_Init_BD.CrearBD()
+#Obj_Init_BD.Crear_Tablas()
