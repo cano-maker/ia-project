@@ -12,4 +12,7 @@ class main:
 		print('\nLarga vida al POO')
 		pass
 
-Ejecutar = main()
+#Ejecutar = main()
+
+if __name__ == '__main__':
+	main()

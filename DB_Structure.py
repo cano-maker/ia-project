@@ -1,9 +1,9 @@
 class DB_Structure:
 	def __init__(self):
-		self.__csv = './resources/test.csv'
+		self.__csv = './resources/train.csv'
 		self.__Usuario = 'postgres'
 		self.__Password = 'postgres'
-		self.__Servidor = '127.0.0.1'
+		self.__Servidor = 'localhost'
 		self.__Puerto = '5432'
 		self.__Nombre_BD = 'spaceship_titanic'  # postgres siempre crea bd en minusculas!!! si pones mayuscula, rompe el código
 		self.__Estructura_tablas = {
@@ -15,7 +15,9 @@ class DB_Structure:
 				"Destination": {"type": "varchar(30)"},
 				"Age": {"type": "int"},
 				"VIP": {"type": "boolean"},
-				"Name": {"type": "varchar(50)"}
+				"Name": {"type": "varchar(50)"},
+				"Transported": {"type": "boolean"}
+
 			},
 			"Services": {
 				"PassengerId": {"type": "varchar(30)", "primary_key": True, "foreign_key": "passenger(PassengerId)"},
