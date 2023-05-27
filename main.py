@@ -1,4 +1,6 @@
 import Inicializar_BD, Poblar_BD
+from passenger_predictor import PassengerPredictor
+
 
 class main:
 	def __init__(self):
@@ -15,4 +17,16 @@ class main:
 #Ejecutar = main()
 
 if __name__ == '__main__':
-	main()
+	#main()
+	user = 'postgres'
+	password = 'postgres'
+	host = 'localhost'
+	port = '5432'
+	database_name = 'spaceship_titanic'
+
+	db_url = f'postgresql://{user}:{password}@{host}:{port}/{database_name}'
+
+	predictor = PassengerPredictor(db_url)
+	predictor.run()
+
+
