@@ -1,5 +1,6 @@
 import Inicializar_BD, Poblar_BD
 from passenger_predictor import PassengerPredictor
+from passenger_trainer import PassengerTrainer
 
 
 class main:
@@ -26,7 +27,10 @@ if __name__ == '__main__':
 
 	db_url = f'postgresql://{user}:{password}@{host}:{port}/{database_name}'
 
-	predictor = PassengerPredictor(db_url)
-	predictor.run()
+	passengerTrainer = PassengerTrainer(db_url)
+	passengerTrainer.run()
+
+
+
 
 
