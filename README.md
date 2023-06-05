@@ -12,6 +12,13 @@ El proyecto Spaceship Titanic incorpora las siguientes tecnologías:
 - **Pandas**: Una popular biblioteca de manipulación de datos en Python que permite un análisis y preprocesamiento eficientes de los datos.
 - **Scikit-learn**: Una biblioteca de aprendizaje automático en Python que proporciona varios algoritmos para el modelado predictivo y el análisis.
 - **psycopg2**: Un adaptador de base de datos PostgreSQL para Python que permite la conexión y manipulación de datos en la base de datos PostgreSQL.
+
+## Prerequisitos:
+
+1. **Python**: El proyecto fué desarrollado en este lenguaje de programación.
+2- **PostgreSQL**: El proyecto fué desarrollador para conectarse con base de datos local en SQL.
+
+
 ## Instalación
 
 Para instalar y ejecutar el proyecto Spaceship Titanic localmente, siga estos pasos:
