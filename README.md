@@ -16,7 +16,7 @@ El proyecto Spaceship Titanic incorpora las siguientes tecnologías:
 ## Prerequisitos:
 
 1. **Python**: El proyecto fué desarrollado en este lenguaje de programación.
-2- **PostgreSQL**: El proyecto fué desarrollador para conectarse con base de datos local en SQL.
+2. **PostgreSQL**: El proyecto fué desarrollador para conectarse con base de datos local en SQL.
 
 
 ## Instalación
