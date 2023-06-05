@@ -25,7 +25,7 @@ Para instalar y ejecutar el proyecto Spaceship Titanic localmente, siga estos pa
 
 1. Clonar el repositorio:
 
-		git clone https://github.com/cano-maker/ia-project.git
+		git clone -b spaceship_titanic https://github.com/cano-maker/ia-project.git
 
 2. Instalar las dependencias requeridas.
 
