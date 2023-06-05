@@ -1,40 +1,53 @@
+
+if __name__ == '__main__':
+	print("\n\nLa ejecución del programa no debería realizarse desde este archivo.")
+	exit()
+
 import psycopg2, psycopg2.errors as SQLExcept2
-import DB_Structure
+from DB_Structure import DB_Structure
 
 class Inicializar_BD:
-	def __init__(self):
-		DB_Params = DB_Structure.DB_Structure()
-		self.Usuario = DB_Params.Usuario()
-		self.Password = DB_Params.Password()
-		self.Servidor = DB_Params.Servidor()
-		self.Puerto = DB_Params.Puerto()
-		self.Nombre_BD = DB_Params.Nombre_BD()
-		self.Estructura_tablas = DB_Params.Estructura_tablas()
+	def __init__(self, CustomPrint=print, dialogo=None):
+		if dialogo is None:
+			self.dialogo = self.ConsoleDialogo
+		else:
+			self.dialogo = dialogo
+		self.CustomPrint = CustomPrint
+		DB_Params = DB_Structure()
+		self.__Usuario = DB_Params.Usuario()
+		self.__Password = DB_Params.Password()
+		self.__Servidor = DB_Params.Servidor()
+		self.__Puerto = DB_Params.Puerto()
+		self.__Nombre_BD = DB_Params.Nombre_BD()
+		self.__Estructura_tablas = DB_Params.Estructura_tablas()
 
+	def ConsoleDialogo(self, *args, **kwargs):
+		print('La base de datos"', self.__Nombre_BD, '"ya existe.')
+		print('Desea recrear la BD?', '1 - Si', 'Cualquier otro valor para omitir creación', sep='\n')
+		return input() == '1'
+	
 	###################
 	##### Crear BD ####
 	###################
 	def CrearBD(self, recrear = False):
+		print = self.CustomPrint # Sobreescribir el comportamiento de print
 		Count = conn = 0
 		try:
-			conn = psycopg2.connect(host=self.Servidor, user=self.Usuario, password=self.Password, port= self.Puerto)
+			conn = psycopg2.connect(host=self.__Servidor, user=self.__Usuario, password=self.__Password, port= self.__Puerto)
 			Count += 1
 			conn.autocommit = True
 			cursor = conn.cursor()
 			if recrear:
-				Query = 'drop database ' + self.Nombre_BD
+				Query = 'drop database ' + self.__Nombre_BD
 				cursor.execute(Query)
 				print('Base de datos borrada correctamente')
-			Query = 'create database ' + self.Nombre_BD
+			Query = 'create database ' + self.__Nombre_BD
 			cursor.execute(Query)
 			print("Base de datos creada!\n")
 		except SQLExcept2.DuplicateDatabase as e:
-			print('La base de datos"', self.Nombre_BD, '"ya existe.')
-			print('Desea recrear la BD?', '1 - Si', 'Cualquier otro valor para omitir creación', sep = '\n')
-			val = input()
-			#val = '1' # Debug
-			print()
-			if val == '1':
+			Eleccion = self.dialogo(titulo='BD Existente', mensaje=f'La base de datos"{self.__Nombre_BD}" ya existe.\nDesea recrear la BD?')
+			#print('elección tomada: ', Eleccion) # Debug
+			if Eleccion:
 				self.CrearBD(recrear = True)
 			else:
 				print('Omitiendo Creación de la BD')
@@ -57,11 +70,12 @@ class Inicializar_BD:
 	##### Inicio Crear Tablas ######
 	################################
 	def Crear_Tablas(self):
+		print = self.CustomPrint # Sobreescribir el comportamiento de print
 		print('Iniciando creación de tablas ....')
-		conn = psycopg2.connect(host=self.Servidor, port= self.Puerto, dbname=self.Nombre_BD, user=self.Usuario, password=self.Password)
+		conn = psycopg2.connect(host=self.__Servidor, port= self.__Puerto, dbname=self.__Nombre_BD, user=self.__Usuario, password=self.__Password)
 		cursor = conn.cursor()
 
-		for table_name, columns in self.Estructura_tablas.items():
+		for table_name, columns in self.__Estructura_tablas.items():
 			create_table_query = self.__build_create_query(table_name, columns)
 			#print(create_table_query) # Borrar tras debug
 			cursor.execute(create_table_query) #Comentado Temporalmente, debug
@@ -75,7 +89,7 @@ class Inicializar_BD:
 		conn.commit()
 		cursor.close()
 		conn.close()
-		print('Tablas creadas con Exito!\n')
+		print('Tarea completada con Exito!\n')
 
 	def __build_create_query(self, table_name, columns):
 		column_definitions = []
@@ -103,7 +117,8 @@ class Inicializar_BD:
 	################################
 	"""
 	def query_database(self, query):
-		conn = psycopg2.connect(host=self.Servidor, port= self.Puerto, dbname=self.Nombre_BD, user=self.Usuario, password=self.Password)
+		print = self.CustomPrint # Sobreescribir el comportamiento de print
+		conn = psycopg2.connect(host=self.__Servidor, port= self.__Puerto, dbname=self.__Nombre_BD, user=self.__Usuario, password=self.__Password)
 		cursor = conn.cursor()
 		try:
 			cursor.execute(query)

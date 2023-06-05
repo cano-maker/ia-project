@@ -1,3 +1,8 @@
+
+if __name__ == '__main__':
+	print("\n\nLa ejecución del programa no debería realizarse desde este archivo.")
+	exit()
+
 class DB_Structure:
 	def __init__(self):
 		self.__csv = './resources/train.csv'
